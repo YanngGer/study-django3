@@ -5,12 +5,11 @@ from . import views
 
 # DefaultRouter的url在末尾会自动加/
 router = DefaultRouter()
-router.register("api/user", views.UserViewSet, basename="user")
+router.register("api/gateway", views.GateWayViewSet, basename="gateway")
 
 urlpatterns = [
-    path('api/login/account', obtain_jwt_token),
-    path('api/login/outLogin', views.OutLogin.as_view()),
-    path('api/currentUser', views.CurrentUser.as_view()),
+    # path('api/login/outLogin', views.OutLogin.as_view()),
+    # path('api/currentUser', views.CurrentUser.as_view()),
 
     re_path("", include(router.urls)),
 ]

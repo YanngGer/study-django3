@@ -1,5 +1,6 @@
 from rest_framework import views, viewsets
 from rest_framework.response import Response
+from django.shortcuts import HttpResponse
 from gettingstarted.config import APIResponse
 from . import models
 from . import serializers
@@ -20,4 +21,11 @@ class CurrentUser(views.APIView):
         current_user = self.request.user
         if current_user:
             data = serializers.UserSerializer(current_user).data
-            return APIResponse(data=data)
+            return Response(data)
+
+
+class OutLogin(views.APIView):
+    def post(self, *args, **kwargs):
+        obj = HttpResponse('ok')
+        obj.delete_cookie('Bearer')
+        return obj

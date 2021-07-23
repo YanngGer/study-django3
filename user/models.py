@@ -26,7 +26,7 @@ class User(AbstractUser):
     avatar = RestrictedFileField(upload_to=user_directory_path, max_length=100,
                                  content_types=[
                                      'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/tiff'],
-                                 max_upload_size=5242880, default='default_avatar.jpeg', verbose_name="用户头像")
+                                 max_upload_size=5242880, default='default_avatar.png', verbose_name="用户头像")
     user_id = models.IntegerField(
         null=True,
         blank=True,
