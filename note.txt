@@ -1,0 +1,11 @@
+pip install django
+    asgiref           3.4.1
+    Django            3.2.5
+    pytz              2021.1
+    sqlparse          0.4.1
+    typing-extensions 3.10.0.0
+
+python manage.py makemigrations
+python manage.py migrate  (初始化生成10张表)
+
+配置autopep8
