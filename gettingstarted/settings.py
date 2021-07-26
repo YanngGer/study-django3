@@ -114,7 +114,11 @@ REST_FRAMEWORK = {
         'user': '5/minute'  # 每分钟可以请求五次
     },
     # 异常
-    'EXCEPTION_HANDLER': 'gettingstarted.config.exception_handler'
+    'EXCEPTION_HANDLER': 'gettingstarted.config.exception_handler',
+    # 修改默认返回JSON的renderer的类
+    'DEFAULT_RENDERER_CLASSES': (
+        'gettingstarted.config.custom_renderer',
+    ),
 }
 # 自定义登录认证
 AUTHENTICATION_BACKENDS = ("gettingstarted.config.UserAuthBackend",)
@@ -123,7 +127,7 @@ JWT_AUTH = {
     # 手动设置登入认证的时候的返回值
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'gettingstarted.config.jwt_response_payload_handler',
     # 过期时间
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
     # 指定返回响应的格式
     'JWT_AUTH_COOKIE': 'Bearer'
 }

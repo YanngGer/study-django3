@@ -8,7 +8,7 @@ router = DefaultRouter()
 router.register("api/gateway", views.GateWayViewSet, basename="gateway")
 
 urlpatterns = [
-    # path('api/login/outLogin', views.OutLogin.as_view()),
+    path('api/notices', views.Test.as_view()),
     # path('api/currentUser', views.CurrentUser.as_view()),
 
     re_path("", include(router.urls)),

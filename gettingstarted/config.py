@@ -1,6 +1,7 @@
 import logging
 from rest_framework.views import exception_handler as drf_exception_handler
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from django.contrib.auth.backends import ModelBackend
 from django.db.models import Q
 from user.models import User
@@ -11,7 +12,7 @@ class APIResponse(Response):
                  **kwargs):
         # data的初始状态：状态码与状态信息
         results = {
-            'status': data_status,
+            'code': data_status,
             'msg': data_msg,
         }
         # data的响应数据体
@@ -51,10 +52,7 @@ class MyError(Exception):
 def jwt_response_payload_handler(token, user=None, request=None):
 
     return {
-        'status': 'ok',
-        'data': {
-            "token": token
-        }
+        "token": token
     }
 # 登录接口
 
@@ -70,3 +68,41 @@ class UserAuthBackend(ModelBackend):
                 return user
         except User.DoesNotExist:
             return
+
+
+'''
+自定义返回处理
+'''
+class custom_renderer(JSONRenderer):
+    # 重构render方法
+    def render(self, data, accepted_media_type=None, renderer_context=None):
+        if renderer_context:
+
+            # print(renderer_context)
+            # print(renderer_context["response"].status_code)
+
+            # 响应的信息，成功和错误的都是这个
+            # 成功和异常响应的信息，异常信息在前面自定义异常处理中已经处理为{'message': 'error'}这种格式
+            # print(data)
+
+            # 如果返回的data为字典
+            if isinstance(data, dict):
+                # 响应信息中有message和code这两个key，则获取响应信息中的message和code，并且将原本data中的这两个key删除，放在自定义响应信息里
+                # 响应信息中没有则将msg内容改为请求成功 code改为请求的状态码
+                msg = data.pop('message', 'success')
+                code = data.pop('code', renderer_context["response"].status_code)
+            # 如果不是字典则将msg内容改为请求成功 code改为请求的状态码
+            else:
+                msg = 'success'
+                code = renderer_context["response"].status_code
+
+            # 自定义返回的格式
+            ret = {
+                'msg': msg,
+                'code': code,
+                'data': data,
+            }
+            # 返回JSON数据
+            return super().render(ret, accepted_media_type, renderer_context)
+        else:
+            return super().render(data, accepted_media_type, renderer_context)
